@@ -46,3 +46,6 @@ def register_view(request):
 
 def dashboard(request):
     return render(request, "main/dashboard.html")
+
+def grocery_search(request):
+    return render(request, 'main/grocerysearch.html')

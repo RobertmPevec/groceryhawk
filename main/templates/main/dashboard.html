@@ -2,22 +2,343 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GroceryHawk Dashboard</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="{% static 'main/assets/vendor/bootstrap-icons/bootstrap-icons.css' %}">
+
+  <!-- Custom CSS -->
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f4f9f4; /* Subtle background */
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Top Navigation Bar */
+    .navbar-custom {
+      background-color: #fff;
+      border-bottom: 1px solid #e0e0e0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    .navbar-brand {
+      font-weight: 700;
+      color: #00796B !important;
+    }
+    .search-input {
+      max-width: 300px;
+    }
+    .nav-icons a {
+      color: #00796B;
+      margin-left: 15px;
+      font-size: 1.4rem;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background-color: #fff;
+      border-right: 1px solid #e0e0e0;
+      min-height: 100vh;
+      padding: 1.5rem;
+    }
+    .sidebar .nav-link {
+      font-size: 1.1rem;
+      color: #00796B;
+      margin-bottom: 10px;
+      padding: 10px 15px;
+      border-radius: 5px;
+    }
+    .sidebar .nav-link:hover, 
+    .sidebar .nav-link.active {
+      background-color: #e0f2f1;
+      font-weight: 600;
+    }
+
+    /* Main Content */
+    .main-content {
+      padding: 2rem;
+    }
+    .section-title {
+      color: #00796B;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    /* Dashboard Wrapper */
+    .dashboard-wrapper {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 2rem;
+    }
+
+    /* Categories Section */
+    .categories {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto; /* horizontal scroll if content is wide */
+      padding-bottom: 1rem;
+    }
+    .category-item {
+      flex: 0 0 auto;
+      width: 100px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      text-align: center;
+      padding: 0.5rem;
+    }
+    .category-item img {
+      width: 50px;
+      margin-bottom: 0.5rem;
+    }
+    .category-item div {
+      font-size: 0.9rem;
+      color: #333;
+    }
+
+    /* Product Cards */
+    .product-card {
+      transition: transform 0.2s;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+
+    /* Discount Banners */
+    .discount-banner {
+      position: relative;
+      background-size: cover;
+      background-position: center;
+      border-radius: 8px;
+      color: #fff;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+    .discount-banner::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,121,107,0.6);
+    }
+    .discount-banner > * {
+      position: relative;
+      z-index: 2;
+    }
+    .discount-banner h3 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Last Order */
+    .last-orders .list-group-item {
+      border: none;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 0.75rem 0;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+      .main-content {
+        padding: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <nav class="navbar navbar-light bg-light">
-        <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1">Dashboard</span>
-            <a href="{% url 'login' %}" class="btn btn-danger">Logout</a>
-        </div>
-    </nav>
+  <!-- Top Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid">
+      <!-- Brand -->
+      <a class="navbar-brand" href="#">GroceryHawk</a>
 
-    <div class="container mt-5">
-        <h2>Welcome to your Dashboard, {{ user.username }}!</h2>
-        <p>This is your secure area where you can manage your account.</p>
+      <!-- Toggler (for small screens) -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNav"
+              aria-controls="topNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Collapsible Section -->
+      <div class="collapse navbar-collapse" id="topNav">
+        <!-- Search Bar -->
+        <form class="d-flex ms-auto me-3">
+          <input class="form-control me-2 search-input" type="search" placeholder="Search products..." aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+        <!-- Icons (Home, Cart, Bell, Profile) -->
+        <div class="nav-icons d-flex align-items-center">
+          <a href="/"><i class="bi bi-house-fill"></i></a>
+          <a href="#"><i class="bi bi-cart-fill"></i></a>
+          <a href="#"><i class="bi bi-bell-fill"></i></a>
+          <a href="#"><i class="bi bi-person-circle"></i></a>
+        </div>
+      </div>
     </div>
+  </nav>
+  
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar Navigation -->
+      <aside class="col-md-2 sidebar d-none d-md-block">
+        <nav class="nav flex-column">
+          <a class="nav-link active" href="#">Dashboard</a>
+          <a class="nav-link" href="/grocery-search/">Grocery Search</a>
+          <a class="nav-link" href="#">All Grocery's</a>
+          <a class="nav-link" href="#">Top Deals</a>
+          <a class="nav-link" href="{% url 'login' %}">Log Out</a>
+        </nav>
+      </aside>
+
+    <!-- Main Content -->
+    <main class="col-md-10 main-content">
+        <div class="dashboard-wrapper">
+        <!-- Categories Section -->
+        <section>
+            <h3 class="section-title">Categories</h3>
+            <div class="categories">
+            <div class="category-item">
+                <img src="{% static 'main/assets/img/ICONS/apple.png' %}" alt="Fruit" style="width: 75px; height: 75px;">
+                <div>Fruit</div>
+            </div>
+            <div class="category-item">
+                <img src="{% static 'main/assets/img/ICONS/veg.png' %}" alt="Vegetable" style="width: 75px; height: 75px;">
+                <div>Vegetable</div>
+            </div>
+            <div class="category-item">
+                <img src="{% static 'main/assets/img/ICONS/fish.png' %}" alt="Fish" style="width: 75px; height: 75px;">
+                <div>Fish</div>
+            </div>
+            <div class="category-item">
+                <img src="{% static 'main/assets/img/ICONS/shicken.png' %}" alt="Meat" style="width: 75px; height: 75px;">
+                <div>Meat</div>
+            </div>
+            <div class="category-item">
+                <img src="{% static 'main/assets/img/ICONS/milk.png' %}" alt="Dairy" style="width: 75px; height: 75px;">
+                <div>Dairy</div>
+            </div>
+            <div class="category-item">
+                <img src="{% static 'main/assets/img/ICONS/snack_chips.png' %}" alt="Snacks" style="width: 75px; height: 75px;">
+                <div>Snacks</div>
+            </div>
+            <div class="category-item">
+                <img src="{% static 'main/assets/img/ICONS/cheese.png' %}" alt="Cheese" style="width: 75px; height: 75px;">
+                <div>Cheese</div>
+            </div>
+            <div class="category-item">
+                <img src="{% static 'main/assets/img/ICONS/bakery.png' %}" alt="Bakery" style="width: 75px; height: 75px;">
+                <div>Bakery</div>
+            </div>
+            <div class="category-item">
+                <img src="{% static 'main/assets/img/ICONS/desert.png' %}" alt="Desserts" style="width: 75px; height: 75px;">
+                <div>Desserts</div>
+            </div>
+            <div class="category-item">
+                <img src="{% static 'main/assets/img/ICONS/wine.png' %}" alt="Wine" style="width: 75px; height: 75px;">
+                <div>Wine</div>
+            </div>
+            </div>
+            </section>
+          <!-- Popular Products Section -->
+          <section class="mt-4">
+            <h3 class="section-title">Popular Products</h3>
+            <div class="row g-3">
+              <div class="col-md-3">
+                <div class="card product-card">
+                  <img src="{% static 'main/assets/img/strawberry.jpg' %}" class="card-img-top" alt="Strawberry">
+                  <div class="card-body">
+                    <h5 class="card-title">Strawberry</h5>
+                    <p class="card-text">$15.00 / 1 kg</p>
+                    <a href="#" class="btn btn-success btn-sm">Add to Cart</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="card product-card">
+                  <img src="{% static 'main/assets/img/cabbage.jpg' %}" class="card-img-top" alt="Cabbage">
+                  <div class="card-body">
+                    <h5 class="card-title">Cabbage</h5>
+                    <p class="card-text">$21.00 / 1 kg</p>
+                    <a href="#" class="btn btn-success btn-sm">Add to Cart</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="card product-card">
+                  <img src="{% static 'main/assets/img/broccoli.jpg' %}" class="card-img-top" alt="Broccoli">
+                  <div class="card-body">
+                    <h5 class="card-title">Broccoli</h5>
+                    <p class="card-text">$12.00 / 1 kg</p>
+                    <a href="#" class="btn btn-success btn-sm">Add to Cart</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="card product-card">
+                  <img src="{% static 'main/assets/img/orange.jpg' %}" class="card-img-top" alt="Orange">
+                  <div class="card-body">
+                    <h5 class="card-title">Orange</h5>
+                    <p class="card-text">$10.00 / 1 kg</p>
+                    <a href="#" class="btn btn-success btn-sm">Add to Cart</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Discount Shop Section -->
+          <section class="mt-4">
+            <h3 class="section-title">Discount Shop</h3>
+            <div class="row g-3">
+              <div class="col-md-4">
+                <div class="discount-banner" style="background-image: url('{% static 'main/assets/img/discount1.jpg' %}');">
+                  <h3>35% Discount</h3>
+                  <a href="#" class="btn btn-success btn-sm">Shop Now</a>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="discount-banner" style="background-image: url('{% static 'main/assets/img/discount2.jpg' %}');">
+                  <h3>20% Discount</h3>
+                  <a href="#" class="btn btn-success btn-sm">Shop Now</a>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="discount-banner" style="background-image: url('{% static 'main/assets/img/discount3.jpg' %}');">
+                  <h3>10% Discount</h3>
+                  <a href="#" class="btn btn-success btn-sm">Shop Now</a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Last Order Section -->
+          <section class="mt-4">
+            <h3 class="section-title">Last Order</h3>
+            <ul class="list-group last-orders">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Red Saffron
+                <span>$150</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Big Fish
+                <span>$120</span>
+              </li>
+            </ul>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+  
+  <!-- Bootstrap 5 Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
