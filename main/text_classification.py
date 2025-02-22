@@ -13,18 +13,21 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 file_path = "datasets/globaldataset.csv"
 
+
 def load_csv(file_path):
     """Load CSV and check if 'title' column exists, while handling format errors."""
     try:
         # Load the CSV and handle bad rows
-        df = pd.read_csv(file_path, dtype=str, on_bad_lines="skip")  
+        df = pd.read_csv(file_path, dtype=str, on_bad_lines="skip")
         print("📝 CSV Columns Found:", df.columns.tolist())  # Print all column names
 
         # Standardize column names (strip spaces)
         df.columns = df.columns.str.strip()
 
         if "title" not in df.columns:
-            raise ValueError("🚨 The CSV file does not contain a 'title' column. Check column names!")
+            raise ValueError(
+                "🚨 The CSV file does not contain a 'title' column. Check column names!"
+            )
 
         df = df.dropna(subset=["title"])  # Drop empty values
         return df
@@ -32,6 +35,7 @@ def load_csv(file_path):
     except Exception as e:
         print(f"🚨 Error loading CSV: {e}")
         return None
+
 
 def get_embedding(text, model="text-embedding-3-small", max_retries=3):
     """Convert text into an embedding vector using OpenAI, with retry handling."""
@@ -41,9 +45,12 @@ def get_embedding(text, model="text-embedding-3-small", max_retries=3):
             response = openai.embeddings.create(input=[text], model=model)
             return np.array(response.data[0].embedding, dtype=np.float32)
         except Exception as e:
-            print(f"⚠️ OpenAI API Error on '{text}' (Attempt {attempt + 1}/{max_retries}): {e}")
+            print(
+                f"⚠️ OpenAI API Error on '{text}' (Attempt {attempt + 1}/{max_retries}): {e}"
+            )
     print(f"Failed to generate embedding for '{text}', using zero vector.")
     return np.zeros(1536, dtype=np.float32)
+
 
 def create_faiss_index(csv_path):
     """Convert each food name into a vector and store in FAISS."""
@@ -84,17 +91,17 @@ def create_faiss_index(csv_path):
         pickle.dump(df.to_dict(orient="records"), f)
 
     print("FAISS index and ID mapping saved successfully!")
-    
+
 
 if __name__ == "__main__":
     print("\nRunning FAISS vectorization pipeline...\n")
-    
+
     # Step 1: Create and Save FAISS Index
     create_faiss_index(file_path)
 
     # Step 2: Load and Display FAISS Index for Verification
     print("\nLoading FAISS index to verify data...")
-    
+
     try:
         index = faiss.read_index("faiss_index.bin")
         print(f"FAISS index loaded with {index.ntotal} items.")
