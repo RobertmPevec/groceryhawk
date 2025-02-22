@@ -11,40 +11,37 @@ def home(request):
 
 
 def login_view(request):
-    if request.user.is_authenticated:  # 🔹 If already logged in, go to dashboard
+    if request.user.is_authenticated:
         return redirect("dashboard")
 
     login_form = AuthenticationForm(request, data=request.POST or None)
-    register_form = UserCreationForm(request.POST or None)
 
     if request.method == "POST":
-        if "login_submit" in request.POST:  # 🔹 User is trying to log in
-            if login_form.is_valid():
-                user = login_form.get_user()
-                if not user:
-                    messages.error(
-                        request,
-                        "Login attempt unsuccessful. Please re-enter your username and password.",
-                    )
+        # Process login submission
+        if login_form.is_valid():
+            user = login_form.get_user()
+            if user:
                 login(request, user)
-                return redirect("dashboard")  # ✅ Redirect to dashboard after login
-
-        elif "register_submit" in request.POST:
-            if register_form.is_valid():
-                register_form.save()
-                messages.success(
-                    request, "Your account has been created! Please log in."
+                return redirect("dashboard")
+            else:
+                messages.error(
+                    request,
+                    "Login attempt unsuccessful. Please re-enter your username and password.",
                 )
-                return redirect("login")  # ✅ Redirect back to login page
+    return render(request, "accounts/login.html", {"login_form": login_form})
 
-    return render(
-        request,
-        "main/login.html",
-        {
-            "login_form": login_form,
-            "register_form": register_form,
-        },
-    )
+
+def register_view(request):
+    if request.user.is_authenticated:
+        return redirect("dashboard")
+    register_form = UserCreationForm(request.POST or None)
+    if request.method == "POST":
+        # Process registration submission
+        if register_form.is_valid():
+            register_form.save()
+            messages.success(request, "Your account has been created! Please log in.")
+            return redirect("login")
+    return render(request, "accounts/register.html", {"register_form": register_form})
 
 
 def dashboard(request):
