@@ -3,8 +3,13 @@ import faiss
 import numpy as np
 import pickle
 import openai
+from tqdm import tqdm
+import os
+from dotenv import load_dotenv
 
-openai.api_key = "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"
+load_dotenv()
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 file_path = "datasets/globaldataset.csv"
 
@@ -104,6 +109,6 @@ if __name__ == "__main__":
             print(f"FAISS Index {i} -> CSV Row {i}: {item['title']}")
 
     except Exception as e:
-        print(f"❌ Error loading FAISS index or mapping: {e}")
+        print(f"Error loading FAISS index or mapping: {e}")
 
     print("\nProcess completed successfully!")
