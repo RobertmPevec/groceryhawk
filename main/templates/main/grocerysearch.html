@@ -6,6 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>GroceryHawk Dashboard</title>
+  <link rel="icon" href="{% static 'main/assets/img/hawk.png' %}" type="image/png">
 
   <!-- Bootstrap 5 CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
@@ -136,6 +137,9 @@
       font-size: 1.75rem;
       margin-bottom: 0.5rem;
     }
+    .profile-icon i {
+    font-size: 4 rem; /* Increase as needed */
+    }
 
     /* Last Order */
     .last-orders .list-group-item {
@@ -197,7 +201,7 @@
         <nav class="nav flex-column">
           <a class="nav-link" href="/dashboard/">Dashboard</a>
           <a class="nav-link active" href="#">Grocery Search</a>
-          <a class="nav-link" href="#">All Grocery's</a>
+          <a class="nav-link" href="{% url 'all_groceries' %}">All Groceries</a>  <!-- ✅ FIXED -->
           <a class="nav-link" href="#">Top Deals</a>
           <a class="nav-link" href="{% url 'login' %}">Log Out</a>
         </nav>

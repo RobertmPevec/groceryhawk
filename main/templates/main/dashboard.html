@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>GroceryHawk Dashboard</title>
-  
+  <link rel="icon" href="{% static 'main/assets/img/hawk.png' %}" type="image/png">
+
   <!-- Bootstrap 5 CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <!-- Bootstrap Icons -->
@@ -382,50 +383,81 @@
         <div class="dashboard-wrapper">
         <!-- Categories Section -->
         <section>
-            <h3 class="section-title">Categories</h3>
-            <div class="categories">
-            <div class="category-item">
+          <h3 class="section-title">Categories</h3>
+          <div class="row categories">
+            <!-- Fruit -->
+            <div class="col-auto category-item">
+              <a href="{% url 'all_groceries' %}?q=Fruit">
                 <img src="{% static 'main/assets/img/ICONS/apple.png' %}" alt="Fruit" style="width: 75px; height: 75px;">
                 <div>Fruit</div>
+              </a>
             </div>
-            <div class="category-item">
+            <!-- Vegetable -->
+            <div class="col-auto category-item">
+              <a href="{% url 'all_groceries' %}?q=Vegetable">
                 <img src="{% static 'main/assets/img/ICONS/veg.png' %}" alt="Vegetable" style="width: 75px; height: 75px;">
                 <div>Vegetable</div>
+              </a>
             </div>
-            <div class="category-item">
+            <!-- Fish -->
+            <div class="col-auto category-item">
+              <a href="{% url 'all_groceries' %}?q=Fish">
                 <img src="{% static 'main/assets/img/ICONS/fish.png' %}" alt="Fish" style="width: 75px; height: 75px;">
                 <div>Fish</div>
+              </a>
             </div>
-            <div class="category-item">
+            <!-- Meat -->
+            <div class="col-auto category-item">
+              <a href="{% url 'all_groceries' %}?q=Meat">
                 <img src="{% static 'main/assets/img/ICONS/shicken.png' %}" alt="Meat" style="width: 75px; height: 75px;">
                 <div>Meat</div>
+              </a>
             </div>
-            <div class="category-item">
+            <!-- Dairy -->
+            <div class="col-auto category-item">
+              <a href="{% url 'all_groceries' %}?q=Dairy">
                 <img src="{% static 'main/assets/img/ICONS/milk.png' %}" alt="Dairy" style="width: 75px; height: 75px;">
                 <div>Dairy</div>
+              </a>
             </div>
-            <div class="category-item">
+            <!-- Snacks -->
+            <div class="col-auto category-item">
+              <a href="{% url 'all_groceries' %}?q=Snacks">
                 <img src="{% static 'main/assets/img/ICONS/snack_chips.png' %}" alt="Snacks" style="width: 75px; height: 75px;">
                 <div>Snacks</div>
+              </a>
             </div>
-            <div class="category-item">
+            <!-- Cheese -->
+            <div class="col-auto category-item">
+              <a href="{% url 'all_groceries' %}?q=Cheese">
                 <img src="{% static 'main/assets/img/ICONS/cheese.png' %}" alt="Cheese" style="width: 75px; height: 75px;">
                 <div>Cheese</div>
+              </a>
             </div>
-            <div class="category-item">
+            <!-- Bakery -->
+            <div class="col-auto category-item">
+              <a href="{% url 'all_groceries' %}?q=Bakery">
                 <img src="{% static 'main/assets/img/ICONS/bakery.png' %}" alt="Bakery" style="width: 75px; height: 75px;">
                 <div>Bakery</div>
+              </a>
             </div>
-            <div class="category-item">
+            <!-- Desserts -->
+            <div class="col-auto category-item">
+              <a href="{% url 'all_groceries' %}?q=Desserts">
                 <img src="{% static 'main/assets/img/ICONS/desert.png' %}" alt="Desserts" style="width: 75px; height: 75px;">
                 <div>Desserts</div>
+              </a>
             </div>
-            <div class="category-item">
+            <!-- Wine -->
+            <div class="col-auto category-item">
+              <a href="{% url 'all_groceries' %}?q=Wine">
                 <img src="{% static 'main/assets/img/ICONS/wine.png' %}" alt="Wine" style="width: 75px; height: 75px;">
                 <div>Wine</div>
+              </a>
             </div>
-            </div>
-            </section>
+          </div>
+        </section>
+        
           <!-- Popular Products Section -->
 <section class="mt-4">
   <h3 class="section-title">Popular Products</h3>
