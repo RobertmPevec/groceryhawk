@@ -1,16 +1,17 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>GroceryHawk Dashboard</title>
-  
+
   <!-- Bootstrap 5 CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="{% static 'main/assets/vendor/bootstrap-icons/bootstrap-icons.css' %}">
-
+  <script src="{% static 'main/assets/js/search.js' %}""></script>
   <!-- Custom CSS -->
   <style>
     body {
@@ -168,7 +169,7 @@
 </head>
 <body>
   <!-- Top Navigation Bar -->
-  <nav class="navbar navbar-expand-lg navbar-custom">
+  <nav class=" navbar navbar-expand-lg navbar-custom">
     <div class="container-fluid">
       <!-- Brand -->
       <a class="navbar-brand ms-3" href="#">GroceryHawk</a>
@@ -239,97 +240,99 @@
     </div>
   </div>
     <script>
-        let map;
-        let marker;
-        let autocomplete;
-        let searchRadius = 5000; // Default radius in meters (5 km)
-        let circle;
+      let map;
+      let marker;
+      let autocomplete;
+      let searchRadius = 5000; // Default radius in meters (5 km)
+      let circle;
 
-        function initMap() {
-            var defaultLocation = { lat: 43.475104, lng: -80.529480 };
+      function initMap() {
+        var defaultLocation = { lat: 43.475104, lng: -80.529480 };
 
-            map = new google.maps.Map(document.getElementById("map"), {
-                center: defaultLocation,
-                zoom: 12,
-            });
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: defaultLocation,
+          zoom: 12,
+        });
 
-            marker = new google.maps.Marker({
-                position: defaultLocation,
-                map: map,
-                draggable: true,
-            });
+        marker = new google.maps.Marker({
+          position: defaultLocation,
+          map: map,
+          draggable: true,
+        });
 
-            // Initialize the search radius circle
-            circle = new google.maps.Circle({
-                map: map,
-                radius: searchRadius, 
-                fillColor: "#00796B",
-                fillOpacity: 0.3,
-                strokeColor: "#00796B",
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-            });
+        // Initialize the search radius circle
+        circle = new google.maps.Circle({
+          map: map,
+          radius: searchRadius,
+          fillColor: "#00796B",
+          fillOpacity: 0.3,
+          strokeColor: "#00796B",
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+        });
 
-            circle.bindTo("center", marker, "position"); // Keep circle centered on the marker
+        circle.bindTo("center", marker, "position"); // Keep circle centered on the marker
 
-            // Initialize Google Places Autocomplete
-            autocomplete = new google.maps.places.Autocomplete(
-                document.getElementById("address-input"),
-                { types: ["geocode"] }
-            );
+        // Initialize Google Places Autocomplete
+        autocomplete = new google.maps.places.Autocomplete(
+          document.getElementById("address-input"),
+          { types: ["geocode"] }
+        );
 
-            autocomplete.addListener("place_changed", () => {
-                let place = autocomplete.getPlace();
-                if (!place.geometry) {
-                    alert("No details available for the selected address.");
-                    return;
-                }
+        autocomplete.addListener("place_changed", () => {
+          let place = autocomplete.getPlace();
+          if (!place.geometry) {
+            alert("No details available for the selected address.");
+            return;
+          }
 
-                let location = place.geometry.location;
-                map.setCenter(location);
-                marker.setPosition(location);
-            });
+          let location = place.geometry.location;
+          map.setCenter(location);
+          marker.setPosition(location);
+        });
 
-            // Handle marker drag event to update circle position
-            google.maps.event.addListener(marker, "dragend", function () {
-                circle.setCenter(marker.getPosition());
-            });
-        }
+        // Handle marker drag event to update circle position
+        google.maps.event.addListener(marker, "dragend", function () {
+          circle.setCenter(marker.getPosition());
+        });
+      }
 
-        // Function to update the search radius from the slider
-        function updateRadius() {
-            let radiusKm = document.getElementById("radius-slider").value;
-            document.getElementById("radius-value").innerText = radiusKm; // Update UI text
-            searchRadius = radiusKm * 1000; // Convert km to meters
-            circle.setRadius(searchRadius); // Update circle radius
-        }
+      // Function to update the search radius from the slider
+      function updateRadius() {
+        let radiusKm = document.getElementById("radius-slider").value;
+        document.getElementById("radius-value").innerText = radiusKm; // Update UI text
+        searchRadius = radiusKm * 1000; // Convert km to meters
+        circle.setRadius(searchRadius); // Update circle radius
+      }
 
-        // Function to get user's current location
-        function getUserLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        let userLocation = {
-                            lat: position.coords.latitude,
-                            lng: position.coords.longitude
-                        };
+      // Function to get user's current location
+      function getUserLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              let userLocation = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+              };
 
-                        map.setCenter(userLocation);
-                        marker.setPosition(userLocation);
-                        circle.setCenter(userLocation); // Update circle center
+              map.setCenter(userLocation);
+              marker.setPosition(userLocation);
+              circle.setCenter(userLocation); // Update circle center
 
-                    },
-                    (error) => {
-                        alert("Geolocation failed: " + error.message);
-                    }
-                );
-            } else {
-                alert("Geolocation is not supported by your browser.");
+            },
+            (error) => {
+              alert("Geolocation failed: " + error.message);
             }
+          );
+        } else {
+          alert("Geolocation is not supported by your browser.");
         }
+      }
     </script>
   <!-- Bootstrap 5 Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDeOz71UpKt_FBLbMwnOEyMDHDemw90hvY&libraries=places&callback=initMap"></script>
-</body>
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDeOz71UpKt_FBLbMwnOEyMDHDemw90hvY&libraries=places&callback=initMap"></script>
+  </body>
+
 </html>

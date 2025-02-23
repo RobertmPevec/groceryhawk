@@ -18,9 +18,7 @@ file_path = "datasets/globaldataset.csv"
 def search_database(query, limit=8):
     df = pd.read_csv("datasets/globaldataset.csv")
     data = df["title"].tolist()
-
     matches = process.extract(query, data, limit=limit)
-
     matched_names = [match[0] for match in matches]
     filtered_df = df[df["title"].isin(matched_names)]
     result_json = filtered_df.to_json(orient="records")
