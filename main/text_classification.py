@@ -6,12 +6,25 @@ import openai
 from tqdm import tqdm
 import os
 from dotenv import load_dotenv
+from thefuzz import process
 
 load_dotenv()
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 file_path = "datasets/globaldataset.csv"
+
+
+def search_database(query, limit=8):
+    df = pd.read_csv("datasets/globaldataset.csv")
+    data = df["title"].tolist()
+
+    matches = process.extract(query, data, limit=limit)
+
+    matched_names = [match[0] for match in matches]
+    filtered_df = df[df["title"].isin(matched_names)]
+    result_json = filtered_df.to_json(orient="records")
+    return result_json
 
 
 def load_csv(file_path):
