@@ -8,6 +8,11 @@ from .text_classification import search_database
 from django.http import JsonResponse
 import json
 
+import pandas as pd
+import os
+import random
+from django.shortcuts import render
+
 
 def search_items(request, keyword):
     try:
@@ -63,3 +68,42 @@ def dashboard(request):
 
 def grocery_search(request):
     return render(request, "main/grocerysearch.html")
+
+
+
+
+
+# Define the CSV file path
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CSV_FILE_PATH = os.path.join(BASE_DIR, "datasets/globaldataset.csv")
+
+def get_lowest_price_products():
+    try:
+        # Load CSV file
+        df = pd.read_csv(CSV_FILE_PATH)
+
+        # Ensure numerical values for price columns
+        price_columns = ["Walmart", "Zehrs", "Freshco", "Food Basics", "Canadian Superstore", "Farahs", "No Frills"]
+        df[price_columns] = df[price_columns].apply(pd.to_numeric, errors="coerce").fillna(0)
+
+        # Find the lowest price and corresponding store(s)
+        df["lowest_price"] = df[price_columns].min(axis=1)
+        df["cheapest_stores"] = df.apply(lambda row: [store for store in price_columns if row[store] == row["lowest_price"]], axis=1)
+
+        # Sort by lowest price and get top 50 cheapest products
+        df_sorted = df.sort_values(by="lowest_price").head(50)
+
+        # Select 4 random products
+        random_products = df_sorted.sample(n=4).to_dict(orient="records")
+
+        return random_products
+
+    except Exception as e:
+        print(f"Error loading CSV: {e}")
+        return []
+
+def dashboard(request):
+    # Get random lowest-priced products
+    products = get_lowest_price_products()
+
+    return render(request, "main/dashboard.html", {"products": products})

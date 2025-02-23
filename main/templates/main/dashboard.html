@@ -153,14 +153,77 @@
       color: #333;
     }
 
-    /* Product Cards */
+        /* Product Card Styling */
     .product-card {
-      transition: transform 0.2s;
-    }
-    .product-card:hover {
-      transform: translateY(-5px);
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+      height: 260px;  /* Ensures all cards are the same height */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
     }
 
+    /* Hover Effect */
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Product Image */
+    .product-image {
+      max-height: 120px; /* Reduced height for better fit */
+      object-fit: contain;
+      padding: 8px;
+      width: auto;
+      margin: 0 auto; /* Centers the image */
+    }
+
+    /* Card Body Padding */
+    .card-body {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Product Title */
+    .card-title {
+      font-size: 13px; /* Adjusted for better fit */
+      font-weight: bold;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    /* Product Price */
+    .product-price {
+      font-size: 12px;
+      color: #00796B;
+      margin: 5px 0;
+    }
+
+    /* Store Information */
+    .product-store {
+      font-size: 11px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    /* Button Styling */
+    .btn-sm {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background-color: #00796B;
+      border: none;
+    }
+
+    .btn-sm:hover {
+      background-color: #005a4e;
+    }
     /* Discount Banners */
     .discount-banner {
       position: relative;
@@ -351,47 +414,38 @@
             </div>
             </section>
           <!-- Popular Products Section -->
-          <section class="mt-4">
-            <h3 class="section-title">Popular Products</h3>
-            <div class="row g-3">
-              <div class="col-md-3">
-                <div class="card product-card">
-                  <img src="{% static 'main/assets/img/strawberry.jpg' %}" class="card-img-top" alt="Strawberry">
-                  <div class="card-body">
-                    <h5 class="card-title">Strawberry</h5>
-                    <p class="card-text">$15.00 / 1 kg</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="card product-card">
-                  <img src="{% static 'main/assets/img/cabbage.jpg' %}" class="card-img-top" alt="Cabbage">
-                  <div class="card-body">
-                    <h5 class="card-title">Cabbage</h5>
-                    <p class="card-text">$21.00 / 1 kg</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="card product-card">
-                  <img src="{% static 'main/assets/img/broccoli.jpg' %}" class="card-img-top" alt="Broccoli">
-                  <div class="card-body">
-                    <h5 class="card-title">Broccoli</h5>
-                    <p class="card-text">$12.00 / 1 kg</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="card product-card">
-                  <img src="{% static 'main/assets/img/orange.jpg' %}" class="card-img-top" alt="Orange">
-                  <div class="card-body">
-                    <h5 class="card-title">Orange</h5>
-                    <p class="card-text">$10.00 / 1 kg</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+<section class="mt-4">
+  <h3 class="section-title">Popular Products</h3>
+<div class="row g-3">
+  {% for product in products %}
+  <div class="col-md-3">
+    <div class="card product-card">
+      <!-- Product Image -->
+      <img src="{{ product.Image }}" class="card-img-top product-image" alt="{{ product.title }}" 
+           onerror="this.src='https://via.placeholder.com/150';">
+      
+      <div class="card-body text-center">
+        <!-- Product Title -->
+        <h6 class="card-title font-weight-bold">{{ product.title }}</h6>
+
+        <!-- Product Price -->
+        <p class="product-price"><strong>Price:</strong> ${{ product.lowest_price }} / {{ product.uom }}</p>
+
+        <!-- Cheapest Stores -->
+        <p class="product-store"><strong>Sold at:</strong> 
+          {% for store in product.cheapest_stores %}
+            {{ store }}{% if not forloop.last %}, {% endif %}
+          {% endfor %}
+        </p>
+
+        <!-- View Button -->
+        <a href="{% url 'grocery_search' %}?query={{ product.title }}" class="btn btn-success btn-sm">View</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+</section>
 
           <!-- Discount Shop Section -->
           <section class="mt-4">
