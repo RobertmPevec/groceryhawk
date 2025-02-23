@@ -7,4 +7,5 @@ urlpatterns = [
     path("create-account/", views.register_view, name="register"),  # Register
     path("dashboard/", views.dashboard, name="dashboard"),  # Dashboard
     path('grocery-search/', views.grocery_search, name='grocery_search'), # Grocery Search
+    path('logout/', custom_logout, name='logout'),
 ]

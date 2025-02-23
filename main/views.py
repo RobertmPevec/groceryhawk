@@ -49,3 +49,7 @@ def dashboard(request):
 
 def grocery_search(request):
     return render(request, 'main/grocerysearch.html')
+
+def custom_logout(request):
+    logout(request)
+    return redirect('/')
