@@ -4,6 +4,19 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from .text_classification import search_database
+from django.http import JsonResponse
+import json
+
+
+def search_items(request, keyword):
+    try:
+        result = search_database(keyword)
+        return JsonResponse({"result": result})
+    except json.JSONDecodeError as err:
+        return JsonResponse({"error": str(err)}, status=400)
+    except Exception as e:
+        return JsonResponse({"error": "An unexpected error occurred."}, status=500)
 
 
 def home(request):
@@ -47,8 +60,6 @@ def register_view(request):
 def dashboard(request):
     return render(request, "main/dashboard.html")
 
-def grocery_search(request):
-    return render(request, 'main/grocerysearch.html')
 
-def custom_logout(request):
-    return redirect('/')
+def grocery_search(request):
+    return render(request, "main/grocerysearch.html")
