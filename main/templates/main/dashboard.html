@@ -13,6 +13,57 @@
 
   <!-- Custom CSS -->
   <style>
+        /* Remove default Bootstrap caret */
+    .profile-icon::after {
+      display: none !important;
+    }
+
+    /* Ensure no underline or extra space */
+    .profile-icon {
+      text-decoration: none !important;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Make sure the dropdown isn't shifting things */
+    .nav-icons {
+      display: flex;
+      align-items: center;
+    }
+        /* Increase Profile Icon Size */
+    .profile-icon i {
+      color: #00796B;
+      font-size: 2.0rem; /* Bigger icon */
+      margin-left: 15px;
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    /* Hover Effect for Profile Icon */
+    .profile-icon:hover {
+      color: #004d40; /* Darker green */
+      transform: scale(1.1);
+      transition: all 0.2s ease-in-out;
+    }
+
+    /* Style Dropdown */
+    .dropdown-menu {
+      min-width: 150px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    /* Style Dropdown Items */
+    .dropdown-item {
+      font-size: 1rem;
+      padding: 10px 15px;
+    }
+
+    /* Log Out Button in Red */
+    .dropdown-item.text-danger {
+      font-weight: 600;
+    }
+
     body {
       font-family: 'Roboto', sans-serif;
       background-color: #f4f9f4; /* Subtle background */
@@ -155,28 +206,40 @@
   </style>
 </head>
 <body>
-  <!-- Top Navigation Bar -->
-  <nav class="navbar navbar-expand-lg navbar-custom">
-    <div class="container-fluid">
-      <!-- Brand -->
-      <a class="navbar-brand ms-3" href="#">GroceryHawk</a>
+<!-- Top Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-custom">
+  <div class="container-fluid">
+    <!-- Brand -->
+    <a class="navbar-brand ms-3" href="#">GroceryHawk</a>
 
-      <!-- Toggler (for small screens) -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNav"
-              aria-controls="topNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+    <!-- Toggler (for small screens) -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNav"
+            aria-controls="topNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-      <!-- Collapsible Section -->
-      <div class="collapse navbar-collapse" id="topNav">
-        <!-- Search Bar -->
-        <!-- Icons (Home, Cart, Bell, Profile) -->
-        <div class="nav-icons d-flex align-items-center ms-auto me-5">
-        <a href="#"><i class="bi bi-person-circle"></i></a>
-        </div>
+    <!-- Collapsible Section -->
+    <div class="collapse navbar-collapse" id="topNav">
+      
+    <!-- Profile Dropdown in Navbar -->
+    <div class="nav-icons d-flex align-items-center ms-auto me-5">
+      <div class="dropdown">
+        <!-- Profile Icon (Click to Open Dropdown) -->
+        <a class="profile-icon dropdown-toggle" href="#" role="button" id="profileDropdown" 
+          data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-person-circle"></i>
+        </a>
+
+        <!-- Dropdown Menu (Only Log Out) -->
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+          <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Log Out</a></li>
+        </ul>
       </div>
     </div>
-  </nav>
+
+    </div> <!-- Closing navbar-collapse -->
+  </div>
+</nav>
   
   <div class="container-fluid">
     <div class="row">
@@ -250,7 +313,6 @@
                   <div class="card-body">
                     <h5 class="card-title">Strawberry</h5>
                     <p class="card-text">$15.00 / 1 kg</p>
-                    <a href="#" class="btn btn-success btn-sm">Add to Cart</a>
                   </div>
                 </div>
               </div>
@@ -260,7 +322,6 @@
                   <div class="card-body">
                     <h5 class="card-title">Cabbage</h5>
                     <p class="card-text">$21.00 / 1 kg</p>
-                    <a href="#" class="btn btn-success btn-sm">Add to Cart</a>
                   </div>
                 </div>
               </div>
@@ -270,7 +331,6 @@
                   <div class="card-body">
                     <h5 class="card-title">Broccoli</h5>
                     <p class="card-text">$12.00 / 1 kg</p>
-                    <a href="#" class="btn btn-success btn-sm">Add to Cart</a>
                   </div>
                 </div>
               </div>
@@ -280,7 +340,6 @@
                   <div class="card-body">
                     <h5 class="card-title">Orange</h5>
                     <p class="card-text">$10.00 / 1 kg</p>
-                    <a href="#" class="btn btn-success btn-sm">Add to Cart</a>
                   </div>
                 </div>
               </div>
@@ -292,20 +351,20 @@
             <h3 class="section-title">Discount Shop</h3>
             <div class="row g-3">
               <div class="col-md-4">
-                <div class="discount-banner" style="background-image: url('{% static 'main/assets/img/discount1.jpg' %}');">
-                  <h3>35% Discount</h3>
+                <div class="discount-banner" style="background-image: url('{% static "main/assets/img/Stores/freshco.jpg" %}');">
+                  <h3>15% Discount</h3>
                   <a href="#" class="btn btn-success btn-sm">Shop Now</a>
                 </div>
               </div>
               <div class="col-md-4">
-                <div class="discount-banner" style="background-image: url('{% static 'main/assets/img/discount2.jpg' %}');">
-                  <h3>20% Discount</h3>
-                  <a href="#" class="btn btn-success btn-sm">Shop Now</a>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="discount-banner" style="background-image: url('{% static 'main/assets/img/discount3.jpg' %}');">
+                <div class="discount-banner" style="background-image: url('{% static "main/assets/img/Stores/wallamrt.jpg" %}');">
                   <h3>10% Discount</h3>
+                  <a href="#" class="btn btn-success btn-sm">Shop Now</a>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="discount-banner" style="background-image: url('{% static "main/assets/img/Stores/zehers.jpg" %}');">
+                  <h3>12% Discount</h3>
                   <a href="#" class="btn btn-success btn-sm">Shop Now</a>
                 </div>
               </div>
