@@ -50,18 +50,20 @@
     /* Style Dropdown */
     .dropdown-menu {
       min-width: 150px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 3px 5px rgba(0,0,0,0.1);
     }
 
     /* Style Dropdown Items */
     .dropdown-item {
       font-size: 1rem;
-      padding: 10px 15px;
+      padding: 3px 5px;
     }
 
     /* Log Out Button in Red */
     .dropdown-item.text-danger {
-      font-weight: 600;
+      font-weight: 400;
+      color: #014c3f; /* Darker green */
+
     }
 
     body {
@@ -311,6 +313,16 @@
       background-color: #004d40 !important; /* Darker green */
       border-color: #004d40 !important;
     }
+      /* Specific styles for the sidebar logout button */
+    .sidebar .nav-link.text-danger {
+    font-size: 0.9rem; /* Smaller text */
+    font-weight: 600;
+    }
+
+    .sidebar .nav-link.text-danger:hover {
+    background-color: transparent !important; /* Remove the default highlight */
+    color: rgb(6, 94, 92) !important; /* Change the text color on hover */
+    }
 
     }
   </style>
@@ -356,13 +368,14 @@
       <!-- Sidebar Navigation -->
       <aside class="col-md-2 sidebar d-none d-md-block">
         <nav class="nav flex-column">
-          <a class="nav-link active" href="#">Dashboard</a>
-          <a class="nav-link" href="/grocery-search/">Grocery Search</a>
-          <a class="nav-link" href="#">All Grocery's</a>
+          <a class="nav-link {% if request.path == '/dashboard/' %}active{% endif %}" href="{% url 'dashboard' %}">Dashboard</a>
+          <a class="nav-link" href="{% url 'grocery_search' %}">Grocery Search</a>
+          <a class="nav-link" href="{% url 'all_groceries' %}">All Groceries</a>  <!-- ✅ FIXED -->
           <a class="nav-link" href="#">Top Deals</a>
-          <a class="nav-link" href="{% url 'login' %}">Log Out</a>
+          <a class="nav-link text-danger" href="{% url 'logout' %}">Log Out</a>
         </nav>
       </aside>
+      
 
     <!-- Main Content -->
     <main class="col-md-10 main-content">

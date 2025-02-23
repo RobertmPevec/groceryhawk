@@ -18,10 +18,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from main import views
+from main.views import dashboard, grocery_search, all_groceries  # ✅ Make sure all_groceries is imported
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("main.urls")),
     path("dashboard/", views.dashboard, name="dashboard"),
     path("grocery-search/", views.grocery_search, name="grocery_search"),  # Ensure this exists
+    path("all-groceries/", all_groceries, name="all_groceries"),  # ✅ Make sure this function is correctly defined
+
 ]

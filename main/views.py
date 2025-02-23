@@ -8,11 +8,12 @@ from .text_classification import search_database
 from django.http import JsonResponse
 import json
 
+from django.core.paginator import Paginator
+
 import pandas as pd
 import os
 import random
 from django.shortcuts import render
-
 
 def search_items(request, keyword):
     try:
@@ -107,3 +108,51 @@ def dashboard(request):
     products = get_lowest_price_products()
 
     return render(request, "main/dashboard.html", {"products": products})
+
+
+# -------------------------------
+def all_groceries(request):
+    try:
+        # Load dataset
+        df = pd.read_csv(CSV_FILE_PATH)
+
+        # Remove exact duplicate rows
+        # If you only want to remove rows with duplicate titles, specify subset=["title"].
+        df.drop_duplicates(subset=["title"], keep="first", inplace=True)
+
+        # Ensure numerical values for price columns
+        price_columns = ["Walmart", "Zehrs", "Freshco", "Food Basics", "Canadian Superstore", "Farahs", "No Frills"]
+        df[price_columns] = df[price_columns].apply(pd.to_numeric, errors="coerce").fillna(0)
+
+        # Process search query (assumes your CSV has a 'title' column)
+        search_query = request.GET.get('q', '')
+        if search_query:
+            df = df[df['title'].str.contains(search_query, case=False, na=False)]
+
+        # Find lowest price for each item
+        df["lowest_price"] = df[price_columns].min(axis=1)
+
+        # Create a dictionary of store prices
+        df["all_stores"] = df.apply(
+            lambda row: {store: row[store] for store in price_columns if row[store] > 0},
+            axis=1
+        )
+
+        # Ensure Image column is filled
+        df["Image"] = df["Image"].fillna("https://via.placeholder.com/150")
+
+        # Convert DataFrame to list of dictionaries
+        groceries = df.to_dict(orient="records")
+
+        # Implement Pagination: show 20 items per page
+        paginator = Paginator(groceries, 20)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        return render(request, "main/all_groceries.html", {
+            "page_obj": page_obj,
+            "search_query": search_query
+        })
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
