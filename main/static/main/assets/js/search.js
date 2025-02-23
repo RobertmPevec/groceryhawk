@@ -51,16 +51,42 @@ function displayData(data) {
         listItem.innerHTML = `
         <div class="d-flex w-100">
             <div class="flex-shrink-0">
-                <img src="${itemData.Image}" alt="${itemData.title}" class="rounded border img-fluid" style="width: 80px; height: 80px; object-fit: cover;">
+                <img src="${itemData.Image}" alt="${itemData.title}" class="rounded border img-fluid" style="width: 150px; height: 150px; object-fit: cover;">
             </div>
             <div class="ms-3 flex-grow-1">
                 <div class="d-flex justify-content-between">
                     <h5 class="mb-0">${itemData.title}</h5>
-                    <p class="fw-bold text-primary">$${itemData["pricing.price"].toFixed(2)}</p>
                 </div>
-                <p class="text-muted small mt-2">${itemData.Store}</p>
-            </div>
-        </div>`;
+                <div class="container mt-4">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped text-center">
+                            <thead>
+                                <tr>
+                                    <th><img width="100%" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Walmart_logo.svg/200px-Walmart_logo.svg.png" alt="Walmart"></th>
+                                    <th><img width="50%" src="https://seeklogo.com/images/Z/zehrs-markets-logo-D3A7CBE6BE-seeklogo.com.png" alt="Zehrs"></th>
+                                    <th><img width="80%" src="https://freshco.com/wp-content/uploads/2020/11/freshco-logo-header.svg" alt="Freshco"></th>
+                                    <th><img width="50%" src="https://upload.wikimedia.org/wikipedia/en/1/16/Food_Basics_Logo.png" alt="Food Basics"></th>
+                                    <th><img width="100%" src="https://dis-prod.assetful.loblaw.ca/content/dam/loblaw-companies-limited/creative-assets/logos/pcx-banner-logos-/superstore_v2.svg" alt="Canadian Superstore"></th>
+                                    <th><img width="50%" src="https://farahfoods.ca/cdn/shop/files/farahs_logo_smart_250x.png?v=1624062594" alt="Farahs"></th> <!-- Replace with actual logo -->
+                                    <th><img width="100%"src="https://dis-prod.assetful.loblaw.ca/content/dam/loblaw-companies-limited/creative-assets/logos/pcx-banner-logos-/nofrills_v2.svg" alt="No Frills"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>${itemData.Walmart}</td>
+                                    <td>${itemData.Zehrs}</td>
+                                    <td>${itemData.Freshco}</td>
+                                    <td>${itemData["Food Basics"]}</td >
+                                    <td>${itemData["Canadian Superstore"]}</td>
+                                    <td>${itemData.Farahs}</td>
+                                    <td>${itemData["No Frills"]}</td>
+                                </tr >
+                            </tbody >
+                        </table >
+                    </div >
+                </div >
+            </div >
+        </div > `;
         itemsContainer.appendChild(listItem);
     });
 
