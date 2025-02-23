@@ -202,63 +202,52 @@
       .main-content {
         padding: 1rem;
       }
-    .freshco-banner {
-  background-image: url('{% static "main/assets/img/Stores/freshco.jpg" %}');
-}
 
-.walmart-banner {
-  background-image: url('{% static "main/assets/img/Stores/wallamrt.jpg" %}');
-}
+    /* General Discount Banner Styles */
+    .discount-banner {
+      background-size: cover;
+      background-position: center;
+      border-radius: 8px;
+      color: #fff;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      position: relative;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-.zehers-banner {
-  background-image: url('{% static "main/assets/img/Stores/zehers.jpg" %}');
-}
+    /* Dark overlay for better text contrast */
+    .discount-banner::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 121, 107, 0.6); /* Dark transparent overlay */
+      transition: background 0.3s ease-in-out;
+    }
 
-/* General Discount Banner Styles */
-.discount-banner {
-  background-size: cover;
-  background-position: center;
-  border-radius: 8px;
-  color: #fff;
-  padding: 1.5rem;
-  margin-bottom: 1rem;
-  overflow: hidden;
-  position: relative;
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+    /* Make sure text is above the overlay */
+    .discount-banner h3,
+    .discount-banner a {
+      position: relative;
+      z-index: 2;
+    }
 
-/* Dark overlay for better text contrast */
-.discount-banner::after {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 121, 107, 0.6); /* Dark transparent overlay */
-  transition: background 0.3s ease-in-out;
-}
+    /* Hover Effects */
+    .discount-banner:hover {
+      transform: scale(1.05); /* Slight zoom effect */
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Soft shadow */
+    }
 
-/* Make sure text is above the overlay */
-.discount-banner h3,
-.discount-banner a {
-  position: relative;
-  z-index: 2;
-}
+    .discount-banner:hover::after {
+      background: rgba(0, 121, 107, 0.3); /* Lighten overlay on hover */
+    }
 
-/* Hover Effects */
-.discount-banner:hover {
-  transform: scale(1.05); /* Slight zoom effect */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Soft shadow */
-}
-
-.discount-banner:hover::after {
-  background: rgba(0, 121, 107, 0.3); /* Lighten overlay on hover */
-}
-
-/* Button Hover Effect */
-.discount-banner a.btn:hover {
-  background-color: #004d40 !important; /* Darker green */
-  border-color: #004d40 !important;
-}
+    /* Button Hover Effect */
+    .discount-banner a.btn:hover {
+      background-color: #004d40 !important; /* Darker green */
+      border-color: #004d40 !important;
+    }
 
     }
   </style>
@@ -410,28 +399,30 @@
             <div class="row g-3">
               
               <div class="col-md-4">
-                <div class="discount-banner freshco-banner">
+                <div class="discount-banner" style="background-image: url('{% static "main/assets/img/Stores/freshco.jpg" %}');">
                   <h3>15% Discount</h3>
-                  <a href="#" class="btn btn-success btn-sm">Shop Now</a>
+                  <a href="{% static 'main/assets/pdfs/freshco flyer.pdf' %}" target="_blank" class="btn btn-success btn-sm">Shop Now</a>
                 </div>
               </div>
 
               <div class="col-md-4">
-                <div class="discount-banner walmart-banner">
+                <div class="discount-banner" style="background-image: url('{% static "main/assets/img/Stores/wallamrt.jpg" %}');">
                   <h3>10% Discount</h3>
-                  <a href="#" class="btn btn-success btn-sm">Shop Now</a>
+                  <a href="{% static 'main/assets/pdfs/wallmart.pdf' %}" target="_blank" class="btn btn-success btn-sm">Shop Now</a>
                 </div>
               </div>
 
               <div class="col-md-4">
-                <div class="discount-banner zehers-banner">
+                <div class="discount-banner" style="background-image: url('{% static "main/assets/img/Stores/zehers.jpg" %}');">
                   <h3>12% Discount</h3>
-                  <a href="#" class="btn btn-success btn-sm">Shop Now</a>
+                  <a href="{% static 'main/assets/pdfs/zehers.pdf' %}" target="_blank" class="btn btn-success btn-sm">Shop Now</a>
                 </div>
               </div>
 
             </div>
           </section>
+
+
 
 
           <!-- Last Order Section -->
